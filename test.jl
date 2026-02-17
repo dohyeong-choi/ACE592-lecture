@@ -67,3 +67,34 @@ function hessian(fdm, f, x)
 end;
 hessian(my_central_diff, g, [1.0, 1.0])
 hessian(my_central_diff_6pts, g, [1.0, 1.0])
+
+
+
+## 3.2
+function f(x)
+    f = -x^(-2)+x-1
+    return f
+end; 
+f(2)
+
+function bisection(f, a, b)
+    l = a
+    u = b
+    m = (l+u)/2
+    f_l = f(l)
+    f_u = f(u)
+    f_m = f(m)
+    if f_l < 0 && f_u > 0
+        if f_m < 0
+            l = (m+u) / 2
+        if f_m > 0
+            u = (m+l)/2
+
+
+
+end;
+    
+
+
+ 
+    
