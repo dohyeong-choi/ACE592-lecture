@@ -294,6 +294,32 @@ end;
 hessian(my_central_diff, g, [1.0, 1.0])
 hessian(my_central_diff_6pts, g, [1.0, 1.0])
 
+## Automatic Differenciation
+## ForwardDiff.jl: scalars and gradients
+using ForwardDiff
+f(x) = x^2;
+ForwardDiff.derivative(f, 2.0)
+
+g(x) = x[1]^2 + 2*x[1] + x[2]^2 - 2*x[2] + 4*x[1]*x[2];
+ForwardDiff.gradient(g, [1.0, 1.0])
+
+## ForwardDiff.jl: Jacobians
+# Note the square brackets that make array_g return an array
+array_g(x) = [x[1]^2 + 2*x[1] + x[2]^2 - 2*x[2] + 4*x[1]*x[2]];
+array_g([1.0, 1.0])
+
+ForwardDiff.jacobian(array_g, [1.0, 1.0])
+
+function G(x)
+    G = similar(x)
+    G[1] = x[1]^2 + 2.0*x[1] + x[2]^2 - 2.0*x[2] + 4.0*x[1]*x[2]
+    G[2] = x[1]^2 - 2.0*x[1] + x[2]^2 + 2.0*x[2] - 4.0*x[1]*x[2]
+    return G
+end;
+ForwardDiff.jacobian(G, [1.0 1.0])
+
+## ForwardDiff.jl: Hessians
+ForwardDiff.hessian(g, [1.0, 1.0])
 
 # * ============================================
 # * Lecture 2.3.
