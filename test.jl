@@ -517,3 +517,47 @@ for (idx, n) in enumerate(ns_plot)
     # Scale: divide weights by bar width to get comparable density height
 end
 p_disc
+
+# * ============================================
+# * Lecture 3.2.
+# * ============================================
+
+function function_iteration(f, initial_guess)
+    tolerance = 1e-3   # tolerance for solution
+    difference = Inf   # initialize difference
+    x = initial_guess  # initialize current value
+    
+    while abs(difference) > tolerance # loop until convergence
+        println("Intermediate guess: $x")
+        x_prev = x  # store previous value
+        x = x_prev - f(x_prev) # calculate next guess
+        difference = x - x_prev # update difference
+    end
+    println("The root of f(x) is $x")
+end;
+
+f(x) = -x^(-2) + x - 1;
+function_iteration(f, 0.1)
+
+using ForwardDiff
+f_prime = ForwardDiff.derivative(f, 1)
+
+
+
+function function_iteration(f, f_prime, initial_guess)
+    tolerance = 1e-3   # tolerance for solution
+    difference = Inf   # initialize difference
+    x = initial_guess  # initialize current value
+    
+    while abs(difference) > tolerance # loop until convergence
+        println("Intermediate guess: $x")
+        x_prev = x  # store previous value
+        x = x_prev - f(x_prev)/f_prime(x_prev) # calculate next guess
+        difference = x - x_prev # update difference
+    end
+    println("The root of f(x) is $x")
+end;
+
+f(x) = -x^(-2) + x - 1;
+f_prime_(x) = 2x^(-3) + 1
+function_iteration(f,f_prime_, 1)
