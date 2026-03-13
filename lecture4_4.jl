@@ -139,7 +139,7 @@ end
 # FOC for X (flipped sign for PATH convention):
 # C'(X_t) + alpha_t - p_B(X_t) + d >= 0  ⊥  X_t >= 0
 @constraint(mod_mcp, foc_X[t in 1:T],
-    C_prime(X[t]) + alpha[t] - p_B(X[t]) + d ⟂ X[t])
+    C_prime(X[t]) + alpha[t] - p_B(X[t]) + d ⟂ X[t]) #  \perp: ⟂
 
 # FOC for I:
 # F'(I_t) - sum_{s=t+1}^{T} β^{s-t} α_s >= 0  ⊥  I_t >= 0
@@ -154,3 +154,17 @@ end
 optimize!(mod_mcp)
 println(solution_summary(mod_mcp))
 
+##
+X_mcp     = value.(X)
+I_mcp     = value.(I)
+alpha_mcp = value.(alpha)
+K_mcp = Vector{Float64}(undef, T)
+K_mcp[1] = K₁
+for t in 2:T
+    K_mcp[t] = K₁ + sum(I_mcp[s] for s in 1:(t-1))
+end
+
+println("Shadow fleet capacity (K): ", round.(K_mcp, digits=1))
+println("Sales (X):                 ", round.(X_mcp, digits=1))
+println("Investment (I):            ", round.(I_mcp, digits=1))
+println("Shadow price (α):          ", round.(alpha_mcp, digits=2))
